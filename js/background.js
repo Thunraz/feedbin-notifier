@@ -1,5 +1,7 @@
 function updateIconOverlay(numberOfFeeds) {
     if (numberOfFeeds != null) {
+        browser.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+
         if (numberOfFeeds > 999) {
             browser.browserAction.setBadgeText({ text: '999+' });
         } else if (numberOfFeeds === 0) {
