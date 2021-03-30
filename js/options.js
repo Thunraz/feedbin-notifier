@@ -29,8 +29,8 @@ function saveOptions(evt) {
         periodInMinutes: intervalValue,
     });
     
-    // Refresh feeds right now
-    browser.runtime.sendMessage({ refresh: true }, () => {});
+    // Refresh feeds right away
+    browser.runtime.sendMessage({ refresh: true });
     
     evt.preventDefault();
     return false;
