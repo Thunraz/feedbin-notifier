@@ -1,0 +1,4 @@
+{
+    "eslint.packageManager": "pnpm",
+    "svg.preview.background": "transparent"
+}

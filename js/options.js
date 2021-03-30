@@ -1,70 +1,87 @@
-// Saves options to localStorage
+/**
+ * Save settings to localStorage.
+ * @param {Event} evt Button click event
+ * @returns {boolean} Always returns false.
+ */
 function saveOptions(evt) {
-	var email = document.getElementById('email').value;
-	var password = document.getElementById('password').value;
-	var interval = parseInt(document.getElementById('interval').value, 10);
+    const email    = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const interval = document.getElementById('interval');
+    const intervalValue = parseInt(interval.value, 10);
+    const button         = document.getElementById('save');
+    const successMessage = document.getElementById('successMessage');
 
-	// Set values in localStorage
-	localStorage['email'] = email;
-	localStorage['password'] = password;
-	localStorage['interval'] = interval;
+    // Set values in localStorage
+    localStorage.email    = email;
+    localStorage.password = password;
+    localStorage.interval = intervalValue;
 
-	// Notify user
-	var button = document.getElementById('close-button');
-	button.addEventListener('click', function() {
-		var box = this.parentNode;
+    // Disable save button again
+    button.disabled = true;
 
-		box.classList.add('hide-alert');
-		box.classList.remove('show-alert');
-	});
-	
-	var alert = document.getElementById('status');
-	alert.classList.add('show-alert');
-	alert.classList.remove('hide-alert');
+    // Show label
+    successMessage.classList.add('visible');
+    setTimeout(() => successMessage.classList.remove('visible'), 5000);
 
-	setTimeout(function() {
-		alert.classList.add('hide-alert');
-		alert.classList.remove('show-alert');
-	}, 3000);
-
-	// Recreate the alarm
-	chrome.alarms.create('feedbin-updater', {
-		delayInMinutes: interval,
-		periodInMinutes: interval
-	});
-	
-	refreshFeeds();
-	
-	evt.preventDefault();
-	return false;
+    // Recreate the alarm
+    browser.alarms.create('feedbin-updater', {
+        delayInMinutes:  intervalValue,
+        periodInMinutes: intervalValue,
+    });
+    
+    // Refresh feeds right now
+    browser.runtime.sendMessage({ refresh: true }, () => {});
+    
+    evt.preventDefault();
+    return false;
 }
 
-function matches(el, selector) {
-	  return (el.matches || el.matchesSelector || el.msMatchesSelector || el.mozMatchesSelector || el.webkitMatchesSelector || el.oMatchesSelector)(selector);
-}
-
-// Restores options page state
+/**
+ * Restore options page state from localStorage
+ * @returns {void}
+ **/
 function restoreOptions() {
-	var email = localStorage["email"];
-	var password = localStorage["password"];
-	var interval = localStorage["interval"];
+    const { email, password, interval } = localStorage;
 
-	// Set values
-	if(email)
-		document.getElementById('email').value = email;
+    // Set values
+    if (email) {
+        document.getElementById('email').value = email;
+    }
 
-	if(password)
-		document.getElementById('password').value = password;
+    if (password) {
+        document.getElementById('password').value = password;
+    }
 
-	if(interval)
-		document.getElementById('interval').value = interval;
+    if (interval) {
+        document.getElementById('interval').value = interval;
+    }
 }
 
-function refreshFeeds() {
-	chrome.runtime.sendMessage({refresh: true}, function() {});
-}
+document.addEventListener('DOMContentLoaded', () => {
+    restoreOptions();
 
-document.addEventListener('DOMContentLoaded', function(){
-	restoreOptions();
-	document.getElementById('settings').addEventListener('submit', saveOptions);
+    const settings = document.getElementById('settings');
+    const save     = document.getElementById('save');
+    const email    = document.getElementById('email');
+    const password = document.getElementById('password');
+    const interval = document.getElementById('interval');
+
+    const enableSubmit = () => {
+        // Just do some basic validation
+        if (email.value && password.value
+            && interval.value && interval.value > 0
+            && interval.value.match(/^[0-9]+$/)) {
+            document.getElementById('save').disabled = false;
+        } else {
+            document.getElementById('save').disabled = true;
+        }
+    };
+
+    settings.addEventListener('submit', saveOptions);
+    save.addEventListener('click', saveOptions);
+    
+    email.addEventListener('keyup',    enableSubmit);
+    password.addEventListener('keyup', enableSubmit);
+    interval.addEventListener('keyup', enableSubmit);
+    interval.addEventListener('change',  enableSubmit);
 });

@@ -1,0 +1,54 @@
+{
+    "extends": "airbnb-base",
+    "env": {
+        "browser": true,
+        "webextensions": true
+    },
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2020
+    },
+    "rules": {
+        "no-const-assign": "warn",
+        "no-this-before-super": "warn",
+        "no-undef": "warn",
+        "no-unreachable": "warn",
+        "no-unused-vars": "warn",
+        "constructor-super": "warn",
+        "valid-typeof": "warn",
+        "no-var": "error",
+        "no-tabs": "error",
+        "indent": ["error", 4],
+        "no-console": "warn",
+        "no-duplicate-imports": "error",
+        "sort-imports": "error",
+        "valid-jsdoc": "warn",
+        "quotes": ["error", "single"],
+        "no-multi-spaces": "off",
+        "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }],
+        "no-bitwise": "off",
+        "no-plusplus": "off",
+        "key-spacing": [2, { "align": "value" }],
+        "spaced-comment": [
+            "error",
+            "always",
+            {
+                "block": { "exceptions": ["/"] },
+                "line": { "exceptions": ["*/", "*"] }
+            }
+        ],
+        "no-param-reassign": "off",
+        "linebreak-style": "off",
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "gulpfile.esm.js",
+                    "tasks/**/*.js"
+                ]
+            }
+        ],
+        "import/no-cycle": "off"
+    }
+}

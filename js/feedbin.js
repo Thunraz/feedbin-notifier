@@ -1,33 +1,25 @@
-(function()
-{
-	var _this = {
-		target:document.getElementsByTagName('title')[0],
-		oldValue:document.title
-	};
+(function a() {
+    const scope = {
+        target:   document.getElementsByTagName('title')[0],
+        oldValue: document.title,
+    };
 
-	_this.onChange = function() {
-		if(_this.oldValue !== document.title)
-		{
-			_this.oldValue = document.title;
-			
-			var match = document.title.match(/Feedbin(?: \((\d+)\))*/);
+    scope.onChange = () => {
+        if (scope.oldValue !== document.title) {
+            scope.oldValue = document.title;
+            
+            const match = document.title.match(/Feedbin(?: \((\d+)\))*/);
 
-			if(match !== null && match.length > 1)
-			{
-				var unreadCount = 0;
-				
-				if(match[1] !== undefined) {
-					unreadCount = match[1];
-				}
+            if (match !== null && match.length > 1 && match[1] !== undefined) {
+                const unreadCount = match[1];
+                browser.runtime.sendMessage({ newCount: unreadCount }, () => {});
+            }
+        }
+    };
 
-				chrome.runtime.sendMessage({newCount: unreadCount}, function() {});
-			} 
-		}
-	};
+    scope.delay = () => {
+        setTimeout(scope.onChange, 1);
+    };
 
-	_this.delay = function() {
-		setTimeout(_this.onChange, 1);
-	};
-
-	_this.target.addEventListener('DOMSubtreeModified', _this.delay, false);
-})()
+    scope.target.addEventListener('DOMSubtreeModified', scope.delay, false);
+}());

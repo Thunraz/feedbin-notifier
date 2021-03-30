@@ -1,104 +1,75 @@
-function setAlarm() {
-	var interval = parseInt(localStorage['interval'], 10) || 15;
+function updateIconOverlay(numberOfFeeds) {
+    if (numberOfFeeds != null) {
+        if (numberOfFeeds > 999) {
+            browser.browserAction.setBadgeText({ text: '999+' });
+        } else if (numberOfFeeds === 0) {
+            browser.browserAction.setBadgeText({ text: '' });
+        } else {
+            browser.browserAction.setBadgeText({ text: numberOfFeeds.toString() });
+        }
+    } else {
+        browser.browserAction.setBadgeText({ text: '!' });
 
-	chrome.alarms.create('feedbin-updater', {
-		delayInMinutes: interval,
-		periodInMinutes: interval
-	});
-	
-	chrome.alarms.onAlarm.addListener(getNumberOfUnreadFeeds);
+        // An error occurred, show the user by setting the background color to an opaque red.
+        browser.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+    }
+}
+
+function handleStateChange() {
+    if (this.readyState === this.DONE) {
+        if (this.status === 200 && this.responseText != null) {
+            const numberOfFeeds = JSON.parse(this.responseText).length;
+            // eslint-disable-next-line no-console
+            console.log(`Found ${numberOfFeeds} unread entries.`);
+            updateIconOverlay(numberOfFeeds);
+        } else {
+            updateIconOverlay(null);
+        }
+    }
 }
 
 function getNumberOfUnreadFeeds(alarm) {
-	if(alarm && alarm.name == 'feedbin-updater') {
-		
-		var user = localStorage["email"];
-		var password = localStorage["password"];
+    if (alarm && alarm.name === 'feedbin-updater') {
+        const { email, password } = localStorage;
 
-		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = handleStateChange;
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = handleStateChange;
 
-		if(user == null || user == '' || password == null || password == '') {
-			
-			console.log('Request without credentials.')
-			xhr.open('GET', 'https://api.feedbin.com/v2/unread_entries.json', true);
-
-		} else {
-
-			console.log('Request with credentials.')
-			xhr.withCredentials = true;
-			xhr.open('GET', 'https://api.feedbin.com/v2/unread_entries.json', true, user, password);
-
-		}
-
-		xhr.send();
-	}
+        if (email != null && email !== '' && password != null && password !== '') {
+            xhr.withCredentials = true;
+            xhr.open('GET', 'https://api.feedbin.com/v2/unread_entries.json', true, email, password);
+            xhr.send();
+        }
+    }
 }
 
-function handleStateChange()
-{
-	if(this.readyState == this.DONE) {
+function setAlarm() {
+    const interval = parseInt(localStorage.interval, 10) || 15;
 
-		if(this.status == 200 && this.responseText != null) {
-
-			var numberOfFeeds = JSON.parse(this.responseText).length;
-			updateIconOverlay(numberOfFeeds);
-
-		} else {
-			updateIconOverlay(null);
-		}
-	}
+    browser.alarms.create('feedbin-updater', {
+        delayInMinutes:  interval,
+        periodInMinutes: interval,
+    });
+    
+    browser.alarms.onAlarm.addListener(getNumberOfUnreadFeeds);
 }
 
-function updateIconOverlay(numberOfFeeds) {
-	if(numberOfFeeds != null) {
+if (browser.runtime && browser.runtime.onStartup) {
+    setAlarm();
+    getNumberOfUnreadFeeds({ name: 'feedbin-updater' });
 
-		if(numberOfFeeds > 999) {
-
-			chrome.browserAction.setBadgeText({ 'text': '999+' });
-
-		} else if(numberOfFeeds == 0) {
-
-			chrome.browserAction.setBadgeText({ 'text': '' });
-
-		} else {
-
-			chrome.browserAction.setBadgeText({ 'text': numberOfFeeds.toString() });
-
-		}
-
-		// Make background transparent
-		chrome.browserAction.setBadgeBackgroundColor({ 'color': [0, 0, 0, 0] });
-	} else {
-		chrome.browserAction.setBadgeText({ 'text': '!' });
-
-		// An error occurred, show the user by setting the background color to an opaque red.
-		chrome.browserAction.setBadgeBackgroundColor({ 'color': [255, 0, 0, 255] });
-	}
+    // Open feedbin.com on click on the button
+    browser.browserAction.onClicked.addListener(() => {
+        browser.tabs.create({ url: 'https://feedbin.com' }, () => {});
+    });
 }
 
-if (chrome.runtime && chrome.runtime.onStartup) {
-	setAlarm();
-	getNumberOfUnreadFeeds({name: 'feedbin-updater'});
-
-	// Open feedbin.com on click on the button
-	chrome.browserAction.onClicked.addListener(function(tab) {
-		chrome.tabs.create({'url': 'https://feedbin.com'}, function(tab) {});
-	});
-}
-
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		console.log(request);
-
-		if(request.refresh !== null && request.refresh) {
-
-			getNumberOfUnreadFeeds({name: 'feedbin-updater'});
-
-		} else if(request.newCount !== null) {
-
-			updateIconOverlay(request.newCount);
-			
-		}
-	}
+browser.runtime.onMessage.addListener(
+    (req) => {
+        if (req.refresh !== null && req.refresh) {
+            getNumberOfUnreadFeeds({ name: 'feedbin-updater' });
+        } else if (req.newCount !== null) {
+            updateIconOverlay(req.newCount);
+        }
+    },
 );
