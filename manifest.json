@@ -16,6 +16,7 @@
         {
             "matches": [ "https://feedbin.com/*", "https://www.feedbin.com/*" ],
             "js": [
+                "js/browser-polyfill.min.js",
                 "js/feedbin.js"
             ]
         }
@@ -23,6 +24,7 @@
    
     "background": {
         "scripts": [
+            "js/browser-polyfill.min.js",
             "js/background.js"
         ]
     },
