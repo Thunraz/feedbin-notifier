@@ -67,7 +67,7 @@ if (browser.runtime && browser.runtime.onStartup) {
 
     // Open feedbin.com on click on the button
     browser.browserAction.onClicked.addListener(() => {
-        browser.tabs.create({ url: 'https://feedbin.com' }, () => {});
+        browser.tabs.create({ url: 'https://feedbin.com' });
     });
 }
 

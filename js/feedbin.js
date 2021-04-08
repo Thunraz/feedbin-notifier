@@ -12,7 +12,7 @@
 
             if (match !== null && match.length > 1 && match[1] !== undefined) {
                 const unreadCount = match[1];
-                browser.runtime.sendMessage({ newCount: unreadCount }, () => {});
+                browser.runtime.sendMessage({ newCount: unreadCount });
             }
         }
     };
