@@ -1,6 +1,11 @@
 function updateIconOverlay(numberOfFeeds) {
     if (numberOfFeeds != null) {
-        browser.browserAction.setBadgeBackgroundColor({ color: [0, 0, 0, 0] });
+        browser.browserAction.setBadgeBackgroundColor({ color: [66, 133, 244, 255] });
+
+        if (typeof browser.browserAction.setBadgeTextColor === 'function') {
+            // function only exists in Firefox
+            browser.browserAction.setBadgeTextColor({ color: '#FFFFFF' });
+        }
 
         if (numberOfFeeds > 999) {
             browser.browserAction.setBadgeText({ text: '999+' });
