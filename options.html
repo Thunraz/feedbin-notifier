@@ -5,13 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta charset="utf-8" />
         <style>
+            body {
+                font-size: 1.0em;
+                padding: 1em;
+            }
+
             #successMessage {
                 font-size: 13px;
                 font-weight: 400;
                 color: #003706;
                 background-color: #30e60b;
                 
-                width: 100%;
+                margin: .6em auto;
+                width: 90%;
                 padding: 4px;
                 border-radius: 4px;
                 min-height: 32px;
@@ -34,48 +40,44 @@
                 transition: opacity 0s;
             }
 
+            #settings label,
+            #settings button {
+                display: block;
+                margin-top: .6em;
+            }
+
+            a:link, a:visited {
+                color: blue;
+            }
         </style>
     </head>
-    <body class="browser-style">
-        <header class="panel-section panel-section-header">
-            <div class="icon-section-header"><img src="images/feedbin.svg" height="32"/></div>
-            <div class="text-section-header">Feedbin notifier</div>
-        </header>
+    <body>
         <p>This extension shows you the number of unread feeds in your Feedbin account.</p>
         
-        <div class="panel" id="settings">
+        <div id="settings">
             <p>Please enter your Feedbin login credentials.</p>
-            <div class="panel-section panel-section-formElements">
-                <div class="panel-formElements-item">
-                    <label for="email" style="width: 25%">E-mail address:</label>
-                    <input type="email" id="email" placeholder="Enter email" />
-                </div>
-                <div class="panel-formElements-item">
-                    <label for="password" style="width: 25%">Password:</label>
-                    <input type="password" id="password" placeholder="Password" />
-                </div>
-                <div class="panel-formElements-item">
-                    <label for="interval" style="width: 25%">Check interval (minutes):</label>
-                    <input type="number" id="interval" min="1" required placeholder="5" />
-                </div>
-                <div class="panel-formElements-item">
-                    <button id="save" disabled>Save &amp; refresh</button>
-                </div>
+            
+            <label for="email">E-mail address:</label>
+            <input type="email" id="email" placeholder="Enter email" />
                 
-                <div id="successMessage">
-                    <img src="images/Check.svg" height="16" />
-                    <span>Saved!</span>
-                </div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Password" />
+        
+            <label for="interval">Check interval (minutes):</label>
+            <input type="number" id="interval" min="1" required placeholder="5" value="5" />
+        
+            <button id="save" disabled>Save &amp; refresh</button>
+                
+            <div id="successMessage" class="">
+                <img src="images/Check.svg" height="16" />
+                <span>Saved!</span>
             </div>
         </div>
 
-        <div class="panel">
-            <h3>Contact</h3>
-            <div>
-                You can contact me on <a href="https://twitter.com/Thunraz/">Twitter</a>.
-                <br/>
-                And if you like this extension consider <a href="https://ko-fi.com/D1D26RGZ">donating me a coffee</a>. :)
-            </div>
+        <div>
+            You can contact me on <a href="https://twitter.com/Thunraz/">Twitter</a>.
+            <br/>
+            And if you like this extension consider <a href="https://ko-fi.com/thunraz">donating me a coffee</a>. &#x263a;
         </div>
 
         <script type="text/javascript" src="js/browser-polyfill.min.js"></script>

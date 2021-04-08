@@ -30,9 +30,7 @@
     },
    
     "options_ui": {
-        "page": "options.html",
-        "browser_style": true,
-        "chrome_style": true
+        "page": "options.html"
     },
    
     "browser_action": {
