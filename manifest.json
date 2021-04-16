@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "author": "Thunraz",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "name": "Feedbin Notifier",
     "description": "Provides a basic notification service for the RSS aggregator Feedbin.",
    
