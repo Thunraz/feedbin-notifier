@@ -9,14 +9,30 @@ Feedbin Notifier is a Web Extension for Chrome and Firefox that checks your [Fee
 * [Firefox](https://addons.mozilla.org/en-US/firefox/addon/feedbin-notifier/)
 
 ## Usage
+### Google Chrome
 Right click the extension and select "Options".
-
 Enter your Feedbin login at the options screen and click on "Save &amp; refresh".
-![screen1]
+
+![chrome_screen1]
 
 The extension will fetch unread feeds and display them as a badge on the icon.
-![screen2]
+
+![chrome_screen2]
+
+### Firefox
+Right click the extension, select "Manage Extension", and switch to the options tab.
+Enter your Feedbin login at the options screen and click on "Save &amp; refresh".
+
+![ff_screen2]
+
+The extension will fetch unread feeds and display them as a badge on the icon.
+
+![ff_screen3]
+
 
 [icon]: webstore/icon.png
-[screen1]: webstore/screenshot_1.png
-[screen2]: webstore/screenshot_2.png
+[chrome_screen1]: webstore/chrome_screenshot_1.png
+[chrome_screen2]: webstore/chrome_screenshot_2.png
+[ff_screen1]: webstore/firefox_screenshot_1.png
+[ff_screen2]: webstore/firefox_screenshot_2.png
+[ff_screen3]: webstore/firefox_screenshot_3.png
