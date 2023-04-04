@@ -1,6 +1,6 @@
 (function a() {
     const scope = {
-        target:   document.getElementsByTagName('title')[0],
+        target:   document.querySelector('title'),
         oldValue: document.title,
     };
 
@@ -16,9 +16,13 @@
         }
     };
 
-    scope.delay = () => {
-        setTimeout(scope.onChange, 1);
+    scope.delay = (mutationList, _observer) => {
+        for (const _mutation of mutationList) {
+            scope.onChange();
+        }
     };
 
-    scope.target.addEventListener('DOMSubtreeModified', scope.delay, false);
+    const observerOptions = { childList: true };
+    const observer = new MutationObserver(scope.delay);
+    observer.observe(scope.target, observerOptions);
 }());
