@@ -1,6 +1,6 @@
 (function a() {
     const scope = {
-        target:   document.getElementsByTagName('title')[0],
+        target:   document.querySelector('title'),
         oldValue: document.title,
     };
 
@@ -9,17 +9,20 @@
             scope.oldValue = document.title;
             
             const match = document.title.match(/Feedbin(?: \((\d+)\))*/);
-
-            if (match !== null && match.length > 1 && match[1] !== undefined) {
-                const unreadCount = match[1];
+            if (match !== null && match.length > 1) {
+                const unreadCount = match[1] || 0;
                 browser.runtime.sendMessage({ newCount: unreadCount });
             }
         }
     };
 
-    scope.delay = () => {
-        setTimeout(scope.onChange, 1);
+    scope.delay = (mutationList, _observer) => {
+        for (const _mutation of mutationList) {
+            scope.onChange();
+        }
     };
 
-    scope.target.addEventListener('DOMSubtreeModified', scope.delay, false);
+    const observerOptions = { childList: true };
+    const observer = new MutationObserver(scope.delay);
+    observer.observe(scope.target, observerOptions);
 }());
