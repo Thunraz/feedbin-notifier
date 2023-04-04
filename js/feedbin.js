@@ -9,9 +9,8 @@
             scope.oldValue = document.title;
             
             const match = document.title.match(/Feedbin(?: \((\d+)\))*/);
-
-            if (match !== null && match.length > 1 && match[1] !== undefined) {
-                const unreadCount = match[1];
+            if (match !== null && match.length > 1) {
+                const unreadCount = match[1] || 0;
                 browser.runtime.sendMessage({ newCount: unreadCount });
             }
         }
